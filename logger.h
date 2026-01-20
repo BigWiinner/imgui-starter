@@ -17,9 +17,11 @@ class Logger {
             void LogInfo(const char*);
             void LogGameEvent(const char*, int = 0);
             void LogToFile();
+            void Start();
         private:
             static Logger* instance;
             static bool open;
             static std::vector<message> logs;
+            static int debugIndex;
 
 };

@@ -1,16 +1,22 @@
 #include "logger.h"
 #include <iostream>
 #include <filesystem>
+#include <fstream>
 
 Logger* Logger::instance = nullptr;
 bool Logger::open = true;
 std::vector<message> Logger::logs = {};
+int Logger::debugIndex = 0;
 
 Logger &Logger::GetInstance() {
     if (!instance) {
         instance = new Logger();
     }
     return *instance;
+}
+
+void Logger::Start() {
+    std::ofstream file("debug.txt", std::ios::trunc);
 }
 
 void Logger::CreateGameLog() {
@@ -29,6 +35,8 @@ void Logger::CreateGameLog() {
     if (clear)
         {
             Logger::logs.clear();
+            Logger::debugIndex = 0;
+            std::ofstream file("debug.txt", std::ios::trunc);
         }
     if (info) 
         {
@@ -46,8 +54,10 @@ void Logger::CreateGameLog() {
             Logger::logs.push_back(txt);
         }
 
-    ImGui::LogToFile(-1, "debug.txt");
     for (int i = 0; i < Logger::logs.size(); i++) {
+        if (i >= Logger::debugIndex) {
+            ImGui::LogToFile(-1, "debug.txt");
+        }
         if (Logger::logs[i].intensity == 1) {
             ImGui::TextColored(ImVec4(1.0, 1.0, 0.0, 1.0), "[WARN]"); ImGui::SameLine();
             ImGui::TextColored(ImVec4(1.0, 1.0, 0.0, 1.0), Logger::logs[i].msg);
@@ -72,8 +82,11 @@ void Logger::CreateGameLog() {
             ImGui::Text("[INFO]"); ImGui::SameLine();
             ImGui::Text(Logger::logs[i].msg);
         }
+        if (i >= Logger::debugIndex) {
+            ImGui::LogFinish();
+            Logger::debugIndex++;
+        }
     }
-    ImGui::LogFinish();
     ImGui::End();
 }
 
