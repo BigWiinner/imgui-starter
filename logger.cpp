@@ -1,4 +1,6 @@
 #include "logger.h"
+#include <iostream>
+#include <filesystem>
 
 Logger* Logger::instance = nullptr;
 bool Logger::open = true;
@@ -44,6 +46,7 @@ void Logger::CreateGameLog() {
             Logger::logs.push_back(txt);
         }
 
+    ImGui::LogToFile(-1, "debug.txt");
     for (int i = 0; i < Logger::logs.size(); i++) {
         if (Logger::logs[i].intensity == 1) {
             ImGui::TextColored(ImVec4(1.0, 1.0, 0.0, 1.0), "[WARN]"); ImGui::SameLine();
@@ -70,7 +73,7 @@ void Logger::CreateGameLog() {
             ImGui::Text(Logger::logs[i].msg);
         }
     }
-    
+    ImGui::LogFinish();
     ImGui::End();
 }
 

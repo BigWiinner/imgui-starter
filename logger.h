@@ -16,6 +16,7 @@ class Logger {
             void CreateGameLog();
             void LogInfo(const char*);
             void LogGameEvent(const char*, int = 0);
+            void LogToFile();
         private:
             static Logger* instance;
             static bool open;
