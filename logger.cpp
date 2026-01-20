@@ -1,6 +1,8 @@
 #include "logger.h"
 
 Logger* Logger::instance = nullptr;
+bool Logger::open = true;
+std::vector< const char* > Logger::logs = {};
 
 Logger &Logger::GetInstance() {
     if (!instance) {
@@ -10,21 +12,21 @@ Logger &Logger::GetInstance() {
 }
 
 void Logger::CreateGameLog() {
-    ImGui::Begin("Game Log");
+    ImGui::Begin("Game Log", &open);
 
-    const bool options = ImGui::Button("Options"); ImGui::SameLine();
-    const bool clear = ImGui::Button("Clear"); ImGui::SameLine();
-    const bool info = ImGui::Button("Test Info"); ImGui::SameLine();
-    const bool warning = ImGui::Button("Test Warning"); ImGui::SameLine();
-    const bool error = ImGui::Button("Test Error");
+    bool options = ImGui::Button("Options"); ImGui::SameLine();
+    bool clear = ImGui::Button("Clear"); ImGui::SameLine();
+    bool info = ImGui::Button("Test Info"); ImGui::SameLine();
+    bool warning = ImGui::Button("Test Warning"); ImGui::SameLine();
+    bool error = ImGui::Button("Test Error");
 
     if (options)
         {
-            ImGui::BulletText("These are the options. Yay!");
+            Logger::logs.push_back("These are the options");
         }
     if (clear)
         {
-
+            Logger::logs.clear();
         }
     if (info) 
         {
@@ -38,5 +40,10 @@ void Logger::CreateGameLog() {
         {
             
         }
+
+    for (int i = 0; i < Logger::logs.size(); i++) {
+        ImGui::Text(Logger::logs[i]);
+    }
+    
     ImGui::End();
 }
