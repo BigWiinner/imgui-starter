@@ -2,7 +2,7 @@
 
 Logger* Logger::instance = nullptr;
 bool Logger::open = true;
-std::vector< const char* > Logger::logs = {};
+std::vector<message> Logger::logs = {};
 
 Logger &Logger::GetInstance() {
     if (!instance) {
@@ -22,7 +22,7 @@ void Logger::CreateGameLog() {
 
     if (options)
         {
-            Logger::logs.push_back("These are the options");
+            
         }
     if (clear)
         {
@@ -30,20 +30,57 @@ void Logger::CreateGameLog() {
         }
     if (info) 
         {
-            
+            message txt = {"This is a test info message", 0};
+            Logger::logs.push_back(txt);
         }
     if (warning) 
         {
-            
+            message txt = {"This is a test warning message", 1};
+            Logger::logs.push_back(txt);
         }
     if (error) 
         {
-            
+            message txt = {"This is a test error message", 2};
+            Logger::logs.push_back(txt);
         }
 
     for (int i = 0; i < Logger::logs.size(); i++) {
-        ImGui::Text(Logger::logs[i]);
+        if (Logger::logs[i].intensity == 1) {
+            ImGui::TextColored(ImVec4(1.0, 1.0, 0.0, 1.0), "[WARN]"); ImGui::SameLine();
+            ImGui::TextColored(ImVec4(1.0, 1.0, 0.0, 1.0), Logger::logs[i].msg);
+        }
+        else if (Logger::logs[i].intensity == 2) {
+            ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0), "[ERROR]"); ImGui::SameLine();
+            ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0), Logger::logs[i].msg);
+        }
+        else if (Logger::logs[i].intensity == 3) {
+            ImGui::Text("[INFO] [GAME]"); ImGui::SameLine();
+            ImGui::Text(Logger::logs[i].msg);
+        }
+        else if (Logger::logs[i].intensity == 4) {
+            ImGui::TextColored(ImVec4(1.0, 1.0, 0.0, 1.0), "[WARN] [GAME]"); ImGui::SameLine();
+            ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0), Logger::logs[i].msg);
+        }
+        else if (Logger::logs[i].intensity == 5) {
+            ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0), "[ERROR] [GAME]"); ImGui::SameLine();
+            ImGui::TextColored(ImVec4(1.0, 0.0, 0.0, 1.0), Logger::logs[i].msg);
+        }
+        else {
+            ImGui::Text("[INFO]"); ImGui::SameLine();
+            ImGui::Text(Logger::logs[i].msg);
+        }
     }
     
     ImGui::End();
+}
+
+void Logger::LogInfo(const char* info) {
+    message log = {info, 0};
+    Logger::logs.push_back(log);
+}
+
+void Logger::LogGameEvent(const char* event, int intensity) {
+    intensity += 3;
+    message log = {event, intensity};
+    Logger::logs.push_back(log);
 }
