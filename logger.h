@@ -15,6 +15,8 @@ class Logger {
             static Logger& GetInstance();
             void CreateGameLog();
             void LogInfo(const char*);
+            void LogWarning(const char*);
+            void LogError(const char*);
             void LogGameEvent(const char*, int = 0);
             void LogToFile();
             void Start();

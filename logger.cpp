@@ -1,3 +1,15 @@
+/*
+    Changes made to other classes:
+    Applications.cpp : Added logger.Start() and uncommented calls to GetInstance, LogInfo, and LogGameEvent,
+                       as well as added Logger::GetInstance().CreateGameLog() to RenderGame().
+
+    Application:
+        Logger works as a logger for ImGui which is used for debugging.
+        Information is logged to both the window "Game Log" and to the file debug.txt
+        Use functions LogInfo, LogWarning, and LogError to call general information,
+        and LogGameEvent for game specific information
+*/
+
 #include "logger.h"
 #include <iostream>
 #include <filesystem>
@@ -108,6 +120,16 @@ void Logger::CreateGameLog() {
 
 void Logger::LogInfo(const char* info) {
     message log = {info, 0};
+    Logger::logs.push_back(log);
+}
+
+void Logger::LogWarning(const char* info) {
+    message log = {info, 1};
+    Logger::logs.push_back(log);
+}
+
+void Logger::LogError(const char* info) {
+    message log = {info, 2};
     Logger::logs.push_back(log);
 }
 
