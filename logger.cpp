@@ -29,9 +29,7 @@ void Logger::CreateGameLog() {
     bool info = ImGui::Button("Test Info"); ImGui::SameLine();
     bool warning = ImGui::Button("Test Warning"); ImGui::SameLine();
     bool error = ImGui::Button("Test Error");
-    ImGui::Separator();
-    static char buf[32];
-    bool command = ImGui::InputText("Command", buf, IM_ARRAYSIZE(buf), ImGuiInputTextFlags_EnterReturnsTrue);
+    bool command;
 
     if (options)
         {
@@ -58,10 +56,6 @@ void Logger::CreateGameLog() {
             message txt = {"This is a test error message", 2};
             Logger::logs.push_back(txt);
         }
-    if (command) {
-        std::cout << buf << std::endl;
-        buf[0] = '\0';
-    }
 
     for (int i = 0; i < Logger::logs.size(); i++) {
         if (i >= Logger::debugIndex) {
@@ -96,6 +90,19 @@ void Logger::CreateGameLog() {
             Logger::debugIndex++;
         }
     }
+
+    float offset_y = ImGui::GetWindowHeight() - ImGui::GetFrameHeightWithSpacing() - ImGui::GetStyle().ItemInnerSpacing.y - 10.0f;
+    ImGui::SetCursorPosY(offset_y);
+    ImGui::BeginChild(" ");
+    ImGui::Separator();
+    static char buf[32];
+    command = ImGui::InputText("Command", buf, IM_ARRAYSIZE(buf), ImGuiInputTextFlags_EnterReturnsTrue);
+    if (command) {
+        std::cout << buf << std::endl;
+        buf[0] = '\0';
+    }
+    ImGui::EndChild();
+
     ImGui::End();
 }
 
