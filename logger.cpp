@@ -2,6 +2,7 @@
 #include <iostream>
 #include <filesystem>
 #include <fstream>
+#include <algorithm>
 
 Logger* Logger::instance = nullptr;
 bool Logger::open = true;
@@ -17,6 +18,7 @@ Logger &Logger::GetInstance() {
 
 void Logger::Start() {
     std::ofstream file("debug.txt", std::ios::trunc);
+    file.close();
 }
 
 void Logger::CreateGameLog() {
@@ -27,6 +29,9 @@ void Logger::CreateGameLog() {
     bool info = ImGui::Button("Test Info"); ImGui::SameLine();
     bool warning = ImGui::Button("Test Warning"); ImGui::SameLine();
     bool error = ImGui::Button("Test Error");
+    ImGui::Separator();
+    static char buf[32];
+    bool command = ImGui::InputText("Command", buf, IM_ARRAYSIZE(buf), ImGuiInputTextFlags_EnterReturnsTrue);
 
     if (options)
         {
@@ -53,6 +58,10 @@ void Logger::CreateGameLog() {
             message txt = {"This is a test error message", 2};
             Logger::logs.push_back(txt);
         }
+    if (command) {
+        std::cout << buf << std::endl;
+        buf[0] = '\0';
+    }
 
     for (int i = 0; i < Logger::logs.size(); i++) {
         if (i >= Logger::debugIndex) {
