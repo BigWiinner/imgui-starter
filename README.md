@@ -8,3 +8,9 @@ It should be able to log to a Dear IMGUI debug console
 It should also log its output to a file.
 
 For the submission, make a branch of this repo and submit a new GitHub URL
+
+Application of Logger:
+        Logger works as a logger for ImGui which is used for debugging.
+        Information is logged to both the window "Game Log" and to the file debug.txt
+        Use functions LogInfo, LogWarning, and LogError to call general information,
+        and LogGameEvent for game specific information
